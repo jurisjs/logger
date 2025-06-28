@@ -3,7 +3,6 @@
 A **ultra-lightweight**, **non-blocking** logger designed for maximum performance in both browser and Node.js environments. Built with a subscription-based architecture that enables reactive logging without impacting application performance.
 
 **🔗 Links:**
-
 - **GitHub Repository**: [https://github.com/jurisjs/universal-logger](https://github.com/jurisjs/universal-logger)
 - **Part of Juris Framework**: [https://github.com/jurisjs/juris](https://github.com/jurisjs/juris)
 
@@ -20,13 +19,11 @@ A **ultra-lightweight**, **non-blocking** logger designed for maximum performanc
 ## Installation
 
 ### NPM Installation
-
 ```bash
 npm install @jurisjs/universal-logger
 ```
 
 ### Direct Usage
-
 Copy the logger code directly into your project - it's just a few lines!
 
 ## Quick Start
@@ -35,11 +32,11 @@ Copy the logger code directly into your project - it's just a few lines!
 
 ```javascript
 // Log messages with optional context and category
-console.log(log.l("User logged in", { userId: 123 }, "auth"));
-console.log(log.w("API rate limit approaching", { remaining: 10 }, "api"));
-console.log(log.e("Database connection failed", { error: "timeout" }, "db"));
-console.log(log.i("Cache cleared", null, "system"));
-console.log(log.d("Debug info", { step: "validation" }, "debug"));
+console.log(log.l('User logged in', { userId: 123 }, 'auth'));
+console.log(log.w('API rate limit approaching', { remaining: 10 }, 'api'));
+console.log(log.e('Database connection failed', { error: 'timeout' }, 'db'));
+console.log(log.i('Cache cleared', null, 'system'));
+console.log(log.d('Debug info', { step: 'validation' }, 'debug'));
 ```
 
 ### Subscription System
@@ -47,14 +44,14 @@ console.log(log.d("Debug info", { step: "validation" }, "debug"));
 ```javascript
 // Subscribe to all log messages
 const unsubscribe = logSub((message, category) => {
-	console.log(`[${category}] ${message}`);
+   console.log(`[${category}] ${message}`);
 });
 
 // Subscribe to specific processing
 logSub((message, category) => {
-	if (category === "error") {
-		sendToErrorTracking(message);
-	}
+   if (category === 'error') {
+      sendToErrorTracking(message);
+   }
 });
 
 // Unsubscribe when done
@@ -71,14 +68,13 @@ The logger provides 5 logging levels, all with identical signatures:
 
 ```javascript
 log.l(message, context?, category?)  // Log
-log.w(message, context?, category?)  // Warn
+log.w(message, context?, category?)  // Warn  
 log.e(message, context?, category?)  // Error
 log.i(message, context?, category?)  // Info
 log.d(message, context?, category?)  // Debug
 ```
 
 **Parameters:**
-
 - `message` (string) - The log message
 - `context` (object, optional) - Additional data to include
 - `category` (string, optional) - Category/namespace for the log
@@ -88,19 +84,17 @@ log.d(message, context?, category?)  // Debug
 ### Subscription Methods
 
 #### `logSub(callback)`
-
 Subscribe to all log messages:
 
 ```javascript
 const callback = (message, category) => {
-	// Handle log message
+   // Handle log message
 };
 
 const unsubscribe = logSub(callback);
 ```
 
 **Parameters:**
-
 - `callback` (function) - Function called for each log message
   - `message` (string) - Formatted log message
   - `category` (string) - Log category
@@ -108,7 +102,6 @@ const unsubscribe = logSub(callback);
 **Returns:** Unsubscribe function
 
 #### `logUnsub(callback)`
-
 Unsubscribe a specific callback:
 
 ```javascript
@@ -123,11 +116,11 @@ logUnsub(callback);
 // Replace console.log with reactive logging
 const originalLog = console.log;
 logSub((message, category) => {
-	originalLog(`[${new Date().toISOString()}] ${message}`);
+    originalLog(`[${new Date().toISOString()}] ${message}`);
 });
 
 // Now all log calls include timestamps
-log.l("Application started");
+log.l('Application started');
 // Output: [2024-01-15T10:30:00.000Z] Application started
 ```
 
@@ -136,63 +129,60 @@ log.l("Application started");
 ```javascript
 // Automatically send errors to tracking service
 logSub((message, category) => {
-	if (category === "error" || message.includes("ERROR")) {
-		sendToSentry(message);
-	}
+    if (category === 'error' || message.includes('ERROR')) {
+        sendToSentry(message);
+    }
 });
 
 // Any error logs are automatically tracked
-log.e("Payment processing failed", { orderId: 12345 }, "error");
+log.e('Payment processing failed', { orderId: 12345 }, 'error');
 ```
 
 ### Development vs Production
 
 ```javascript
 // Development: verbose logging
-if (process.env.NODE_ENV === "development") {
-	logSub((message, category) => {
-		console.log(`🔍 [${category}] ${message}`);
-	});
+if (process.env.NODE_ENV === 'development') {
+    logSub((message, category) => {
+        console.log(`🔍 [${category}] ${message}`);
+    });
 }
 
 // Production: only errors
-if (process.env.NODE_ENV === "production") {
-	logSub((message, category) => {
-		if (category === "error") {
-			console.error(message);
-		}
-	});
+if (process.env.NODE_ENV === 'production') {
+    logSub((message, category) => {
+        if (category === 'error') {
+            console.error(message);
+        }
+    });
 }
 ```
 
 ### React Integration
 
 ```javascript
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 function LogViewer() {
-	const [logs, setLogs] = useState([]);
-
-	useEffect(() => {
-		const unsubscribe = logSub((message, category) => {
-			setLogs((prev) => [
-				...prev.slice(-99),
-				{ message, category, time: Date.now() },
-			]);
-		});
-
-		return unsubscribe;
-	}, []);
-
-	return (
-		<div>
-			{logs.map((log, i) => (
-				<div key={i} className={`log-${log.category}`}>
-					{log.message}
-				</div>
-			))}
-		</div>
-	);
+    const [logs, setLogs] = useState([]);
+    
+    useEffect(() => {
+        const unsubscribe = logSub((message, category) => {
+            setLogs(prev => [...prev.slice(-99), { message, category, time: Date.now() }]);
+        });
+        
+        return unsubscribe;
+    }, []);
+    
+    return (
+        <div>
+            {logs.map((log, i) => (
+                <div key={i} className={`log-${log.category}`}>
+                    {log.message}
+                </div>
+            ))}
+        </div>
+    );
 }
 ```
 
@@ -200,20 +190,20 @@ function LogViewer() {
 
 ```javascript
 export default {
-	data() {
-		return {
-			logs: [],
-		};
-	},
-	mounted() {
-		this.unsubscribe = logSub((message, category) => {
-			this.logs.push({ message, category, time: Date.now() });
-			if (this.logs.length > 100) this.logs.shift();
-		});
-	},
-	beforeUnmount() {
-		if (this.unsubscribe) this.unsubscribe();
-	},
+    data() {
+        return {
+            logs: []
+        };
+    },
+    mounted() {
+        this.unsubscribe = logSub((message, category) => {
+            this.logs.push({ message, category, time: Date.now() });
+            if (this.logs.length > 100) this.logs.shift();
+        });
+    },
+    beforeUnmount() {
+        if (this.unsubscribe) this.unsubscribe();
+    }
 };
 ```
 
@@ -221,19 +211,19 @@ export default {
 
 ```javascript
 // File logger for Node.js
-const fs = require("fs");
-const logFile = fs.createWriteStream("app.log", { flags: "a" });
+const fs = require('fs');
+const logFile = fs.createWriteStream('app.log', { flags: 'a' });
 
 logSub((message, category) => {
-	const timestamp = new Date().toISOString();
-	logFile.write(`${timestamp} [${category}] ${message}\n`);
+    const timestamp = new Date().toISOString();
+    logFile.write(`${timestamp} [${category}] ${message}\n`);
 });
 
 // Memory logger for debugging
 const memoryLogs = [];
 logSub((message, category) => {
-	memoryLogs.push({ message, category, timestamp: Date.now() });
-	if (memoryLogs.length > 1000) memoryLogs.shift();
+    memoryLogs.push({ message, category, timestamp: Date.now() });
+    if (memoryLogs.length > 1000) memoryLogs.shift();
 });
 ```
 
@@ -245,7 +235,7 @@ The logger uses `setTimeout(0)` to ensure all subscriber notifications are **asy
 
 ```javascript
 // This returns immediately - no blocking
-const result = log.l("Process started", { pid: 123 });
+const result = log.l('Process started', { pid: 123 });
 
 // Subscribers are notified asynchronously
 // Main thread continues without interruption
@@ -273,15 +263,15 @@ This logger is the core logging system for [Juris](https://github.com/jurisjs/ju
 ```javascript
 // In Juris applications, the logger is available globally
 const MyComponent = (props, context) => {
-	// Log component lifecycle
-	log.i("Component rendered", { props }, "component");
-
-	return {
-		div: {
-			onClick: () => log.l("Button clicked", null, "user-interaction"),
-			text: "Click me",
-		},
-	};
+    // Log component lifecycle
+    log.i('Component rendered', { props }, 'component');
+    
+    return {
+        div: {
+            onClick: () => log.l('Button clicked', null, 'user-interaction'),
+            text: 'Click me'
+        }
+    };
 };
 ```
 
@@ -292,15 +282,11 @@ const app = express();
 
 // Log all requests
 app.use((req, res, next) => {
-	log.i(
-		`${req.method} ${req.path}`,
-		{
-			ip: req.ip,
-			userAgent: req.get("User-Agent"),
-		},
-		"http"
-	);
-	next();
+    log.i(`${req.method} ${req.path}`, { 
+        ip: req.ip, 
+        userAgent: req.get('User-Agent') 
+    }, 'http');
+    next();
 });
 ```
 
@@ -309,35 +295,32 @@ app.use((req, res, next) => {
 ```javascript
 // Create a logging service
 class LoggingService {
-	constructor() {
-		this.subscribers = [];
-		this.unsubscribe = logSub((message, category) => {
-			this.notifySubscribers(message, category);
-		});
-	}
-
-	subscribe(callback) {
-		this.subscribers.push(callback);
-	}
-
-	notifySubscribers(message, category) {
-		this.subscribers.forEach((callback) => {
-			try {
-				callback(message, category);
-			} catch (e) {}
-		});
-	}
-
-	destroy() {
-		if (this.unsubscribe) this.unsubscribe();
-	}
+    constructor() {
+        this.subscribers = [];
+        this.unsubscribe = logSub((message, category) => {
+            this.notifySubscribers(message, category);
+        });
+    }
+    
+    subscribe(callback) {
+        this.subscribers.push(callback);
+    }
+    
+    notifySubscribers(message, category) {
+        this.subscribers.forEach(callback => {
+            try { callback(message, category); } catch (e) {}
+        });
+    }
+    
+    destroy() {
+        if (this.unsubscribe) this.unsubscribe();
+    }
 }
 ```
 
 ## Browser Support
 
 Works in all environments supporting:
-
 - ES6 arrow functions
 - `setTimeout`
 - Basic array methods (`forEach`, `push`, `splice`, `indexOf`)
@@ -347,36 +330,34 @@ Works in all environments supporting:
 The complete logger implementation:
 
 ```javascript
-"use strict";
+'use strict';
 const createLogger = () => {
-	const s = [];
-	const f = (m, c, cat) => {
-		const msg = `${cat ? `[${cat}] ` : ""}${m}${
-			c ? ` ${JSON.stringify(c)}` : ""
-		}`;
-		setTimeout(() => s.forEach((sub) => sub(msg, cat)), 0);
-		return msg;
-	};
-	return {
-		log: { l: f, w: f, e: f, i: f, d: f },
-		sub: (cb) => s.push(cb),
-		unsub: (cb) => s.splice(s.indexOf(cb), 1),
-	};
+    const s = [];
+    const f = (m, c, cat) => {
+        const msg = `${cat ? `[${cat}] ` : ''}${m}${c ? ` ${JSON.stringify(c)}` : ''}`;
+        setTimeout(() => s.forEach(sub => sub(msg, cat)), 0);
+        return msg;
+    };
+    return {
+        log: { l: f, w: f, e: f, i: f, d: f },
+        sub: cb => s.push(cb),
+        unsub: cb => s.splice(s.indexOf(cb), 1)
+    };
 };
 
-if (typeof window !== "undefined") {
-	const { log, sub, unsub } = createLogger();
-	window.log = log;
-	window.logSub = sub;
-	window.logUnsub = unsub;
-} else if (typeof global !== "undefined") {
-	const { log, sub, unsub } = createLogger();
-	global.log = log;
-	global.logSub = sub;
-	global.logUnsub = unsub;
+if (typeof window !== 'undefined') {
+    const { log, sub, unsub } = createLogger();
+    window.log = log;
+    window.logSub = sub;
+    window.logUnsub = unsub;
+} else if (typeof global !== 'undefined') {
+    const { log, sub, unsub } = createLogger();
+    global.log = log;
+    global.logSub = sub;
+    global.logUnsub = unsub;
 } else {
-	const { log, sub, unsub } = createLogger();
-	module.exports = { log, sub, unsub };
+    const { log, sub, unsub } = createLogger();
+    module.exports = { log, sub, unsub };
 }
 ```
 
